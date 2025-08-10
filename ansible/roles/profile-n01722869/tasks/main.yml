@@ -1,0 +1,10 @@
+---
+- name: Add TMOUT config block to /etc/profile
+  ansible.builtin.lineinfile:
+    path: /etc/profile
+    line: "{{ item }}"
+    insertafter: EOF
+    create: yes
+  loop:
+    - "#Test block added by Ansible……n01722869"
+    - "export TMOUT=1500"

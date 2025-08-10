@@ -1,0 +1,18 @@
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Local vars & secrets
+*.tfvars
+*.tfvars.json
+*.pem
+
+# Ansible runtime stuff
+*.retry
+inventory.ini
+
+# OS/editor
+.DS_Store
+*.swp

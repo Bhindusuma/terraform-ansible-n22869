@@ -1,0 +1,11 @@
+---
+- name: Apply all configuration
+  hosts: all
+  become: yes
+
+  roles:
+    - profile-n01722869
+    - user-n01722869
+    #- datadisk-n01722869
+    - webserver-n01722869
+    - motd-n01722869

@@ -1,0 +1,52 @@
+---
+- name: Create group cloudadmins
+  ansible.builtin.group:
+    name: cloudadmins
+    state: present
+
+- name: Create users and add them to cloudadmins and wheel
+  ansible.builtin.user:
+    name: "{{ item }}"
+    groups: cloudadmins,sudo
+    shell: /bin/bash
+    append: yes
+    create_home: yes
+    state: present
+  loop:
+    - user100
+    - user200
+    - user300
+
+- name: Ensure .ssh directory exists
+  file:
+    path: "/home/{{ item }}/.ssh"
+    state: directory
+    mode: '0700'
+    owner: "{{ item }}"
+    group: "{{ item }}"
+  loop:
+    - user100
+    - user200
+    - user300
+
+- name: Generate SSH key manually for users
+  command: ssh-keygen -t rsa -b 2048 -f /home/{{ item }}/.ssh/id_rsa -N ""
+  args:
+    creates: "/home/{{ item }}/.ssh/id_rsa"
+  loop:
+    - user100
+    - user200
+    - user300
+  become: true
+
+- name: Fix ownership of .ssh directory and keys
+  file:
+    path: "/home/{{ item }}/.ssh"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    recurse: yes
+  loop:
+    - user100
+    - user200
+    - user300
+  become: true

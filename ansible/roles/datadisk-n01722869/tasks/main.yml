@@ -1,0 +1,70 @@
+- name: Wipe all partition data on /dev/sdc
+  command: "sgdisk --zap-all /dev/sdc"
+  become: true
+
+- name: Create 4GB XFS partition on /dev/sdc1 with GPT label
+  parted:
+    device: /dev/sdc
+    number: 1
+    part_type: primary
+    fs_type: xfs
+    label: gpt
+    part_start: 0%
+    part_end: 40%
+    state: present
+
+- name: Create 5GB EXT4 partition on /dev/sdc2
+  parted:
+    device: /dev/sdc
+    number: 2
+    part_type: primary
+    fs_type: ext4
+    part_start: 40%
+    part_end: 90%
+    state: present
+
+- name: Reload partition table
+  command: partprobe
+  become: true
+
+- name: Wait for /dev/sdc2 to be available
+  wait_for:
+    path: /dev/sdc2
+    state: present
+    timeout: 20
+
+- name: Format /dev/sdc1 as XFS
+  filesystem:
+    fstype: xfs
+    dev: /dev/sdc1
+
+- name: Format /dev/sdc2 as EXT4
+  filesystem:
+    fstype: ext4
+    dev: /dev/sdc2
+
+- name: Create mount point /part1
+  file:
+    path: /part1
+    state: directory
+
+- name: Create mount point /part2
+  file:
+    path: /part2
+    state: directory
+
+- name: Mount /dev/sdc1 to /part1 and make persistent
+  mount:
+    path: /part1
+    src: /dev/sdc1
+    fstype: xfs
+    opts: defaults
+    state: mounted
+
+- name: Mount /dev/sdc2 to /part2 and make persistent
+  mount:
+    path: /part2
+    src: /dev/sdc2
+    fstype: ext4
+    opts: defaults
+    state: mounted

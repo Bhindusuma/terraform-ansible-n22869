@@ -1,0 +1,14 @@
+---
+- name: Create MOTD file
+  copy:
+    dest: /etc/motd
+    content: |
+      Welcome to your VM!
+      Managed by Ansible - n01722869
+
+- name: Set permissions on MOTD
+  file:
+    path: /etc/motd
+    owner: root
+    group: root
+    mode: '0644'
