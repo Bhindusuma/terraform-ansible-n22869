@@ -1,18 +1,22 @@
-# Terraform
-**/.terraform/
-*.tfstate
-*.tfstate.*
+.terraform/
+**/.terraform/*
+terraform.tfstate
+terraform.tfstate.*
+*.tfstate.backup
 crash.log
-
-# Local vars & secrets
-*.tfvars
-*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl
 *.pem
-
-# Ansible runtime stuff
-*.retry
-inventory.ini
-
-# OS/editor
-.DS_Store
-*.swp
+*.key
+*.zip
+*.tar.gz
+*.log
+.terraform/
+terraform.tfstate*
+*.tfvars
+*.pem
+*.key
+ansible/inventory.ini
